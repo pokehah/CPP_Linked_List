@@ -52,11 +52,11 @@ class LLIterator {
 template <typename _T>
 class LinkedList {
     public:
-        template <typename> struct Node;
+        struct Node;
         using value_type = _T;
         using Iterator = LLIterator<LinkedList>;
         using Initializer_List = std::initializer_list<_T>;
-        using abstract = Node<_T>; // LinkedList is an abstract of Node. Used in Iterator.
+        using abstract = Node; // LinkedList is an abstract of Node. Used in Iterator.
     public:
         LinkedList() : Head{nullptr}, Size{0} {}
         LinkedList(const LinkedList<_T> &ll);
@@ -66,14 +66,6 @@ class LinkedList {
         LinkedList& operator =(const LinkedList<_T> &right);
         LinkedList& operator =(const Initializer_List &list);
 
-        // Boy I wish I knew how to define templated nested classes externally.
-        template <typename> struct Node {
-            Node() = default;
-            Node(_T pData) : Data{pData}, Next{nullptr} {}
-            _T Data;
-            Node* Next;
-        };
-
         void Destroy();
 
         void Insert(_T pData);
@@ -82,7 +74,7 @@ class LinkedList {
         Iterator begin() const;
         Iterator end() const;
     private:
-        Node<_T> *Head;
+        Node *Head;
         unsigned int Size;
 };
 
@@ -120,9 +112,18 @@ LinkedList<_T>& LinkedList<_T>::operator =(const Initializer_List &list) {
 }
 
 template <typename _T>
+struct LinkedList<_T>::Node {
+    Node() = default;
+    Node(_T pData) : Data{pData}, Next{nullptr} {}
+    _T Data;
+    Node* Next;
+};
+
+
+template <typename _T>
 void LinkedList<_T>::Destroy() {
-    Node<_T> *Current = Head;
-    Node<_T> *tmp = nullptr;
+    Node *Current = Head;
+    Node *tmp = nullptr;
     while (Current != nullptr)
     {
         tmp = Current;
@@ -136,13 +137,13 @@ void LinkedList<_T>::Destroy() {
 template <typename _T>
 void LinkedList<_T>::Insert(_T pData) {
     if (Head == nullptr) // if Head null, allocate Head
-        Head = new Node<_T>(pData);
+        Head = new Node(pData);
     else // Otherwise, traverse until a Node has no next.
     {
-        Node<_T> *ptr = Head;
+        Node *ptr = Head;
         while (ptr->Next != nullptr)
             ptr = ptr->Next;
-        ptr->Next = new Node<_T>(pData);
+        ptr->Next = new Node(pData);
     }
     ++Size;
 }
