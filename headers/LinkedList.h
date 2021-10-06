@@ -49,25 +49,25 @@ class LLIterator {
 };
 
 
-template <typename Type>
+template <typename _T>
 class LinkedList {
     public:
-        template <typename _T = Type> struct Node;
-        using value_type = Type;
+        template <typename> struct Node;
+        using value_type = _T;
         using Iterator = LLIterator<LinkedList>;
-        using Initializer_List = std::initializer_list<Type>;
-        using abstract = Node<Type>; // LinkedList is an abstract of Node. Used in Iterator.
+        using Initializer_List = std::initializer_list<_T>;
+        using abstract = Node<_T>; // LinkedList is an abstract of Node. Used in Iterator.
     public:
         LinkedList() : Head{nullptr}, Size{0} {}
-        LinkedList(const LinkedList &ll);
-        LinkedList(Initializer_List list);
+        LinkedList(const LinkedList<_T> &ll);
+        LinkedList(const Initializer_List &list);
         ~LinkedList() { Destroy(); }
 
-        LinkedList& operator =(const LinkedList<Type> &right);
-        LinkedList& operator =(const Initializer_List& list);
+        LinkedList& operator =(const LinkedList<_T> &right);
+        LinkedList& operator =(const Initializer_List &list);
 
         // Boy I wish I knew how to define templated nested classes externally.
-        template <typename _T> struct Node {
+        template <typename> struct Node {
             Node() = default;
             Node(_T pData) : Data{pData}, Next{nullptr} {}
             _T Data;
@@ -76,53 +76,53 @@ class LinkedList {
 
         void Destroy();
 
-        void Insert(Type pData);
-        void Insert(std::initializer_list<Type> list);
+        void Insert(_T pData);
+        void Insert(std::initializer_list<_T> list);
 
         Iterator begin() const;
         Iterator end() const;
     private:
-        Node<Type> *Head;
+        Node<_T> *Head;
         unsigned int Size;
 };
 
 
 // LinkedList Member Functions //
-template <typename Type>
-LinkedList<Type>::LinkedList(const LinkedList &ll)
+template <typename _T>
+LinkedList<_T>::LinkedList(const LinkedList<_T> &ll)
     : Head{nullptr}, Size{0}
 {
     for (const auto &item : ll)
         Insert(item);
 }
 
-template <typename Type>
-LinkedList<Type>::LinkedList(std::initializer_list<Type> list)
+template <typename _T>
+LinkedList<_T>::LinkedList(const std::initializer_list<_T>& list)
     : Head{nullptr}, Size{0}
 {
     Insert(list);
 }
 
 
-template <typename Type>
-LinkedList<Type>& LinkedList<Type>::operator =(const LinkedList<Type> &right) {
+template <typename _T>
+LinkedList<_T>& LinkedList<_T>::operator =(const LinkedList<_T> &right) {
     Destroy();
     for (const auto &item : right)
         Insert(item);
     return *this;
 }
 
-template <typename Type>
-LinkedList<Type>& LinkedList<Type>::operator =(const Initializer_List& list) {
+template <typename _T>
+LinkedList<_T>& LinkedList<_T>::operator =(const Initializer_List &list) {
     Destroy();
     Insert(list);
     return *this;
 }
 
-template <typename Type>
-void LinkedList<Type>::Destroy() {
-    Node<Type> *Current = Head;
-    Node<Type> *tmp = nullptr;
+template <typename _T>
+void LinkedList<_T>::Destroy() {
+    Node<_T> *Current = Head;
+    Node<_T> *tmp = nullptr;
     while (Current != nullptr)
     {
         tmp = Current;
@@ -133,40 +133,40 @@ void LinkedList<Type>::Destroy() {
     Size = 0;
 }
 
-template <typename Type>
-void LinkedList<Type>::Insert(Type pData) {
+template <typename _T>
+void LinkedList<_T>::Insert(_T pData) {
     if (Head == nullptr) // if Head null, allocate Head
-        Head = new Node<Type>(pData);
+        Head = new Node<_T>(pData);
     else // Otherwise, traverse until a Node has no next.
     {
-        Node<Type> *ptr = Head;
+        Node<_T> *ptr = Head;
         while (ptr->Next != nullptr)
             ptr = ptr->Next;
-        ptr->Next = new Node<Type>(pData);
+        ptr->Next = new Node<_T>(pData);
     }
     ++Size;
 }
 
-template <typename Type>
-void LinkedList<Type>::Insert(std::initializer_list<Type> list) {
+template <typename _T>
+void LinkedList<_T>::Insert(std::initializer_list<_T> list) {
     for (auto &Val : list)
         Insert(Val);
 }
 
-template <typename Type>
-LLIterator<LinkedList<Type>> LinkedList<Type>::begin() const {
-    return LLIterator<LinkedList<Type>>{Head};
+template <typename _T>
+LLIterator<LinkedList<_T>> LinkedList<_T>::begin() const {
+    return LLIterator<LinkedList<_T>>{Head};
 }
 
-template <typename Type>
-LLIterator<LinkedList<Type>> LinkedList<Type>::end() const {
-    return LLIterator<LinkedList<Type>>{nullptr};
+template <typename _T>
+LLIterator<LinkedList<_T>> LinkedList<_T>::end() const {
+    return LLIterator<LinkedList<_T>>{nullptr};
 }
 
 
 // Free Functions for LinkedList //
-template <typename Type>
-void Print(LinkedList<Type> List)
+template <typename _T>
+void Print(LinkedList<_T> List)
 {
     auto Iter = List.begin();
     std::cout << "[ ";
@@ -174,9 +174,7 @@ void Print(LinkedList<Type> List)
     {
         std::cout << *(Iter++);
         while (Iter != List.end())
-        {
             std::cout << ", " << *(Iter++);
-        }
     }
     std::cout << " ]" << std::endl;
 }
