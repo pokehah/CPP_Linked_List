@@ -172,12 +172,10 @@ void Print(LinkedList<Type> List)
     std::cout << "[ ";
     if (Iter != List.end())
     {
-        std::cout << *Iter;
-        ++Iter;
+        std::cout << *(Iter++);
         while (Iter != List.end())
         {
-            std::cout << ", " << *Iter;
-            ++Iter;
+            std::cout << ", " << *(Iter++);
         }
     }
     std::cout << " ]" << std::endl;
