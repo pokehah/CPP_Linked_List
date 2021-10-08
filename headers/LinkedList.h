@@ -70,6 +70,7 @@ class LinkedList {
     public:
         LinkedList() : Head{nullptr}, Size{0} {}
         LinkedList(const LinkedList<_T> &ll);
+        LinkedList(LinkedList<_T> &&ll);
         LinkedList(const Initializer_List &list);
         ~LinkedList() { Destroy(); }
 
@@ -96,6 +97,16 @@ LinkedList<_T>::LinkedList(const LinkedList<_T> &ll)
 {
     for (const auto &item : ll)
         Insert(item);
+}
+
+template <typename _T>
+LinkedList<_T>::LinkedList(LinkedList<_T> &&ll)
+    : Head{nullptr}, Size{0}
+{
+    Head = ll.Head;
+    Size = ll.Size;
+    ll.Head = nullptr;
+    ll.Size = 0;
 }
 
 template <typename _T>
