@@ -1,7 +1,6 @@
 #include <iostream>
 #include <algorithm> //std::find
 #include "./headers/LinkedList.h"
-#include "./headers/CircularDoublyLinkedList.h"
 
 void LLInitTest();
 void LLFindTest();
@@ -37,7 +36,7 @@ void LLFindTest() {
 void LLInitTest() {
     LinkedList<int> list;
     LinkedList<int> l2{5, 2, 3, 4}; // yooo initializer list contructor implemented.
-
+                                    // it's the small things in life
     std::cout << "\nlist = ";
     Print(list); // Empty
     std::cout << "  l2 = ";
@@ -57,25 +56,3 @@ void LLInitTest() {
     std::cout << "  l2 = ";
     Print(l2);
 }
-
-/*
-// How do you alias without, and specify template later when using alias?
-// using LList = CircularDoublyLinkedList;
-// LList<int> List;
-void working() {
-    using LList = CircularDoublyLinkedList<int>;
-    LList List;
- 
-    List.Insert(5);
-    std::cout << List.Get() << std::endl;
-
-    LList::TType test = 2;
-    std::cout << test;
-
-    //LList::Node<int> n;
-
-    //List::Node n; // How could I do this to get a Node of the appropriate template instantiation since Class should be aware of type?
-    
-}
-*/
-
