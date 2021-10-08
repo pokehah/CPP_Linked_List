@@ -6,7 +6,6 @@
 #include <initializer_list>
 #include <iostream>
 
-// NEEDS Copy+Move Constructors
 template <class LList>
 class LLIterator {
     public:
@@ -20,7 +19,15 @@ class LLIterator {
         using reference         = _T&;
     public:
         LLIterator() : Current{nullptr} {}
+        LLIterator(const LLIterator &it) {
+            Current = it.Current;
+        }
+        LLIterator( LLIterator &&it ) {
+            this->Current = it.Current;
+            it.Current = nullptr;
+        }
         LLIterator( _abstract *pN ) : Current{pN} {}
+        ~LLIterator() { Current = nullptr; }
 
         _T operator *() {
             if (Current == nullptr)
@@ -38,10 +45,13 @@ class LLIterator {
                 Current = Current->Next;
             return temp;
         }
-        bool operator ==( const LLIterator<LList>& Right ) {
+        LLIterator& operator =( const LLIterator &Right ) {
+            Current = Right.Current;
+        }
+        bool operator ==( const LLIterator<LList> &Right ) {
             return (Current == Right.Current);
         }
-        bool operator !=( const LLIterator<LList>& Right ) {
+        bool operator !=( const LLIterator<LList> &Right ) {
             return (Current != Right.Current);
         }
     private:
