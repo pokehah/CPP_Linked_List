@@ -2,6 +2,7 @@
 // - Defines an unsorted singlely linked list.
 #pragma once
 
+#include <exception>
 #include <iterator>
 #include <initializer_list>
 #include <iostream>
@@ -9,6 +10,9 @@
 template <class LList>
 class LLIterator {
     public:
+        struct empty_list : public std::exception {
+            const char* what() const noexcept { return "Exception on attempted dereference of an iterator to an empty LinkedList."; }
+        };
         using _T = typename LList::value_type;
         using _abstract = typename LList::abstract;
     public: // Iterator Boilerplate //
@@ -31,7 +35,7 @@ class LLIterator {
 
         _T operator *() {
             if (Current == nullptr)
-                throw "LLIterator can't dereference null pointer.";
+                throw empty_list{};
             return Current->Data;
         }
         LLIterator<LList> operator ++() {
@@ -64,7 +68,8 @@ class LinkedList {
     public:
         struct Node;
         using value_type = _T;
-        using Iterator = LLIterator<LinkedList>;
+        using iterator = LLIterator<LinkedList>;
+        //using const_iterator = x; // implement const_iterator
         using Initializer_List = std::initializer_list<_T>;
         using abstract = Node; // LinkedList is an abstract of Node. Used in Iterator.
     public:
@@ -82,8 +87,8 @@ class LinkedList {
         void Insert(_T pData);
         void Insert(std::initializer_list<_T> list);
 
-        Iterator begin() const;
-        Iterator end() const;
+        iterator begin() const;
+        iterator end() const;
     private:
         Node *Head;
         unsigned int Size;
@@ -176,7 +181,7 @@ void LinkedList<_T>::Insert(std::initializer_list<_T> list) {
 }
 
 template <typename _T>
-LLIterator<LinkedList<_T>> LinkedList<_T>::begin() const {
+typename LinkedList<_T>::iterator LinkedList<_T>::begin() const {
     return LLIterator<LinkedList<_T>>{Head};
 }
 
