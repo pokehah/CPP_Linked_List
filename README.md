@@ -2,7 +2,6 @@
 My amateur implementation of a Linked List in C++.
 
 Supports:
- - Copy with itself
  - Initialization with initializer_list
  - Assignment with initializer_list
- - Iterator based functions such as range-based for loops and std::find()
+ - Iterator dependent functions
